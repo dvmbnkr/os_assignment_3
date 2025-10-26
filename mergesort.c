@@ -6,6 +6,7 @@
 #include <string.h> /* for memcpy */
 #include <stdlib.h> /* for malloc */
 #include "mergesort.h"
+#include <pthread.h>
 
 /* this function will be called by mergesort() and also by parallel_mergesort(). */
 void merge(int leftstart, int leftend, int rightstart, int rightend){
@@ -36,14 +37,34 @@ void my_mergesort(int left, int right){
 	if (left < right){
 		mid = left + (right - left) / 2; // Find the mid point
 		my_mergesort(left, mid); // Recursively sort the left half
-		my_mergesort(mid + 1, right); // Recursively sort the right half
+		my_mergesort(mid + 1, right); // Recursively sort the right half 
 		merge(left, mid, mid+1, right); // Merge the two halves
 	}
 }
 
 /* this function will be called by the testing program. */
 void * parallel_mergesort(void *arg){
-		
+	struct argument *args = (struct argument *) arg; // Cast the void pointer to argument struct pointer
+	int left = args -> left; // Extract left, right and level from the struct
+	int right = args -> right;
+	int level = args -> level;
+	if (left < right){
+		mid = left + (right - left) / 2; // Find the mid point
+		if(level > 0){ // If we can still create more threads
+			pthread_t leftThread, rightThread; // Create two threads for left and right subarrays
+			struct argument *leftArgs = buildArgs(left, mid, level - 1); // Build arguments for left thread
+			struct argument *rightArgs = buildArgs(mid + 1, right, level - 1); // Build arguments for right thread
+			pthread_create(&leftThread, NULL, parallel_mergesort, (void *) leftArgs); // Create left thread
+			pthread_create(&rightThread, NULL, parallel_mergesort, (void *) rightArgs); // Create right thread
+			pthread_join(leftThread, NULL); // Wait for left thread to finish
+			pthread_join(rightThread, NULL); // Wait for right thread to finish
+			free(leftArgs); // Free the allocated memory for arguments
+			free(rightArgs);
+		}else{ // If we cannot create more threads
+			my_mergesort(left, mid); // Sort the left half
+			my_mergesort(mid + 1, right); // Sort the right half
+		}
+	}
 	return NULL;
 
 }

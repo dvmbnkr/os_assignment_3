@@ -50,6 +50,12 @@ void * parallel_mergesort(void *arg){
 	int left = args -> left; // Extract left, right and level from the struct
 	int right = args -> right;
 	int level = args -> level;
+
+	if(level >= cutoff || left >= right){
+    my_mergesort(left, right);
+    return;
+  	}
+	
 	if (left < right){
 		int mid = left + (right - left) / 2; // Find the mid point
 		if(level > 0){ // If we can still create more threads

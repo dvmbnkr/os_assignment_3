@@ -49,7 +49,7 @@ void * parallel_mergesort(void *arg){
 	int right = args -> right;
 	int level = args -> level;
 	if (left < right){
-		mid = left + (right - left) / 2; // Find the mid point
+		int mid = left + (right - left) / 2; // Find the mid point
 		if(level > 0){ // If we can still create more threads
 			pthread_t leftThread, rightThread; // Create two threads for left and right subarrays
 			struct argument *leftArgs = buildArgs(left, mid, level - 1); // Build arguments for left thread

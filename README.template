@@ -3,32 +3,84 @@ README.template
 ## Project Number/Title 
 
 * Authors: Devam Banker, Ishva Rathod and Neel Patel
-* Group name: Your Group Name
+* Group name: Group 112
 
 ## Overview
 
-Concisely explain what the program does. If this exceeds a couple of
-sentences, you're going too far. Generally, you should be pulling this
-right from the project specification. We don't want you to just cut and
-paste, but paraphrase what is stated in the project specification.
+The following C program is an implementation of a multi-threaded merge sort algorithm using
+the pthread library. It's aim is to display inter-thread synchronisation and parallel performance improvement. 
+
+It aims to demonstrate inter-thread synchronisation and parallel performance improvement compared 
+to traditional single-threaded merge sort.
+
+A user can define an array size, the maximum recursion depth for thread  creation, the depth of parallel threads
+and to control array generated - a random seed. To achieve faster sorting for large datasets, additional 
+threads are spawned recursively as the cutoff level increases, allowing subarrays to be handled concurrently.
 
 ## Manifest
 
-A listing of source files and other non-generated files, and a brief
-(one-line) explanation of the purpose of each file.
+
+mergesort.c - Implements core sorting logic: merge(), my_mergesort(), parallel_mergesort(),
+and buildArgs(). Handles both serial and threaded recursion.
+
+mergesort.h - Header file declaring global variables, struct definitions, and function prototype for mergesort.c
+
+test-mergesort.c - Program that generates test data, calls sorting functions, measures performance, and verifies correctness.
+
+Makefile - Automates compilation using gcc with -pthread and warning flags.
+
+README - Documentation describing the project overview, features, testing methodology, and reflection.
 
 ## Building the project
 
-This section should tell the user how to build your code.  If you are
-delivering a library, where does it need to be installed, or how do you use
-it? Is this an executable, if so, how can a user get up to speed as fast as
-possible?
+    Open the terminal and navigate to the project directory.
+
+    Compile the code using the provided Makefile:
+
+    make
+
+
+    This produces an executable named test-mergesort.
+
+    To clean up all object and dependency files:
+    ```bash
+    make clean
+    ```
+
+    Requirements:
+    ```bash
+    GCC compiler supporting POSIX threads (gcc version >= 9.0)
+    ```
+    Linux or macOS environment with pthread library available
 
 ## Features and usage
+
+### Features
 
 Summarise the main features of your program. It is also appropriate to
 instruct the user how to use your program.
 
+Parallel Merge Sort: Creates new threads recursively up to the cutoff level chosen by the user.
+
+Cutoff Control: Limits how many threads are made to keep performance balanced.
+
+Recursive Merging: Combines sorted subarrays efficiently using a temporary array.
+
+Timing Display: Shows how long the sort takes, making it easy to compare serial and parallel runs.
+
+Result Check: Automatically verifies that the final array is sorted correctly.
+
+#### Usage
+Run the program as follows:
+
+```bash
+./test-mergesort <input_size> <cutoff_level> <seed>
+```
+
+Example:
+```bash
+./test-mergesort 100000000 3 1234
+```
 ## Testing
 
 This section should detail how you tested your code. Simply stating "I ran
